@@ -10,13 +10,14 @@ add_link_options(-fsanitize=address,undefined)
 
 # shared code
 
+
 # every exercises/*.c becomes its own executable, named after the file
 file(GLOB EXERCISES CONFIGURE_DEPENDS exercises/*.c)
 foreach(src ${EXERCISES})
     get_filename_component(name ${src} NAME_WE)
     add_executable(${name} ${src})
-    # target_link_libraries(${name} PRIVATE math_utils)
 endforeach()
 
 # real projects
 add_subdirectory(projects/inventory)
+add_subdirectory(projects/studentMS)

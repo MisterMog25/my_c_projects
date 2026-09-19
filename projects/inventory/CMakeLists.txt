@@ -4,4 +4,8 @@ add_executable(inventory
     src/inventory.c
     src/storage.c
 )
+
+
+
+
 target_include_directories(inventory PRIVATE include)
