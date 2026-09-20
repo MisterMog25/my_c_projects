@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <unistd.h>
-#include <time.h> 
 
 typedef struct{
     int id;
@@ -22,23 +20,22 @@ typedef struct{
 void inv_print(const Inventory *inv);
 void inv_init(Inventory *inv);
 void inv_free(Inventory *inv);
-bool add_product(Inventory *inv, const char *name, int price_cents, int quantity);
+bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity);
 
-int main(){
+int main(void){
     Inventory inv;
     inv_init(&inv); 
-
-    Product product1 = {1, "keyboard", 12900, 4};
-    Product product2 = {2, "mouse", 5900, 4};
-    Product product3 = {3, "laptop", 289999, 4};
-    Product items[] = {product1, product2, product3};
-
+    int choice = 0;
     bool isRunning = true;
+
     printf("*** INVENTORY V2 ***\n");
-    
-    inv = (Inventory){.items = items, .count = 3, .capacity = 8, .next_id = 4};
+
+    inv_add(&inv, "keyboard", 12900, 4);
+    inv_add(&inv, "mouse", 5900, 4);
+    inv_add(&inv, "laptop", 289999, 4);
 
     inv_print(&inv);
+    inv_free(&inv);
     return 0;
 }
 
@@ -65,6 +62,27 @@ void inv_print(const Inventory *inv){
         printf("Product #%d\n", prods[i].id);
         printf("Name: %s\n", prods[i].name);
         printf("Price: $%d.%02d\n", price_dollars, price_cents);
-        printf("Quantity %d\n", prods[i].quantity);
+        printf("Quantity: %d\n", prods[i].quantity);
     }
+}
+
+bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity) {
+    if (inv->capacity == inv->count) {
+        size_t newCap = (inv->capacity) ? inv->capacity * 2 : 8;
+        Product *temp = realloc(inv->items, sizeof(Product) * newCap);
+        if (temp == NULL) return 0;
+        inv->items = temp;
+        inv->capacity = newCap;
+        temp = NULL;
+    }
+
+    Product *p = &inv->items[inv->count];
+    p->id = inv->next_id;
+    snprintf(p->name, sizeof p->name, "%s", name);
+    p->price_cents = price_cents;
+    p->quantity = quantity;
+
+    (inv->count)++;
+    (inv->next_id)++;
+    return 1;
 }
