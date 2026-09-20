@@ -21,3 +21,4 @@ endforeach()
 # real projects
 add_subdirectory(projects/inventory)
 add_subdirectory(projects/studentMS)
+
