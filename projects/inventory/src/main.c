@@ -20,6 +20,7 @@ void inv_free(Inventory *inv);
 int main(){
     Inventory inv;
     inv_init(&inv); 
+    printf("Hello world!");
 
     return 0;
 
