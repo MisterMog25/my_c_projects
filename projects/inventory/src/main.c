@@ -2,54 +2,50 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include "inventory.h"
+#include "input.h"
 
-typedef struct{
-    int id;
-    char name[50];
-    int price_cents;
-    int quantity;
-} Product;
 
-typedef struct{
-    Product *items;
-    size_t count;
-    size_t capacity;
-    int next_id;
-} Inventory;
 
 void inv_print(const Inventory *inv);
-void inv_init(Inventory *inv);
-void inv_free(Inventory *inv);
-bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity);
+
 
 int main(void){
     Inventory inv;
     inv_init(&inv); 
+
     int choice = 0;
+    char name[PRODUCT_NAME_LEN] = "";
+    int price = 0;
+    int quantity = 0;
     bool isRunning = true;
 
-    printf("*** INVENTORY V2 ***\n");
+    printf("*** INVENTORY V2 ***\n1 - ADD PRODUCT\n2 - EXIT\n");
 
-    inv_add(&inv, "keyboard", 12900, 4);
-    inv_add(&inv, "mouse", 5900, 4);
-    inv_add(&inv, "laptop", 289999, 4);
+    while (isRunning){
+        if (!readInt("Enter the number: ", 1, 2, &choice)) break;
+        switch (choice) {
+            case 1:
+                readString("Enter the name of the product: ", name, PRODUCT_NAME_LEN);
+                readInt("Enter the price in cents: ", 1, 999999999, &price);
+                readInt("Enter the quantity: ", 1, 999999999, &quantity);
 
-    inv_print(&inv);
+                inv_add(&inv, name, price, quantity);
+                break;
+            case 2:
+                inv_free(&inv);
+                isRunning = false;
+                break;
+        }
+    }
+
     inv_free(&inv);
+    printf("Goodbye!\n");
+    
     return 0;
 }
 
-void inv_init(Inventory *inv){
-    inv->items = NULL;
-    inv->count = 0;
-    inv -> capacity = 0;
-    inv -> next_id = 1;
-}
 
-void inv_free(Inventory *inv){
-    free(inv->items);
-    inv_init(inv);
-}
 
 void inv_print(const Inventory *inv){
     int price_dollars = 0;
@@ -64,25 +60,4 @@ void inv_print(const Inventory *inv){
         printf("Price: $%d.%02d\n", price_dollars, price_cents);
         printf("Quantity: %d\n", prods[i].quantity);
     }
-}
-
-bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity) {
-    if (inv->capacity == inv->count) {
-        size_t newCap = (inv->capacity) ? inv->capacity * 2 : 8;
-        Product *temp = realloc(inv->items, sizeof(Product) * newCap);
-        if (temp == NULL) return 0;
-        inv->items = temp;
-        inv->capacity = newCap;
-        temp = NULL;
-    }
-
-    Product *p = &inv->items[inv->count];
-    p->id = inv->next_id;
-    snprintf(p->name, sizeof p->name, "%s", name);
-    p->price_cents = price_cents;
-    p->quantity = quantity;
-
-    (inv->count)++;
-    (inv->next_id)++;
-    return 1;
 }
