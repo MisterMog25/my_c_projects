@@ -35,3 +35,28 @@ bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity) {
     return 1;
 }
 
+Product* inv_find(Inventory *inv, int id){
+    if (inv->count == 0) {
+        return NULL;
+    }
+    for (size_t i = 0; i <inv->count; i++){
+        if (inv->items[i].id == id){
+            return inv->items + i;
+        }
+    }
+    return NULL;
+}
+// [A, B, C, D, E]
+bool inv_remove(Inventory *inv, int id) {
+    Product *p = inv_find(inv, id);
+    if (p != NULL){
+        size_t idx = p - inv->items;
+
+    } else {
+        return false;
+    }
+
+}
+
+
+
