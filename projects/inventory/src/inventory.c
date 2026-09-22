@@ -1,6 +1,7 @@
 #include "inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void inv_init(Inventory *inv){
     inv->items = NULL;
@@ -49,12 +50,20 @@ Product* inv_find(Inventory *inv, int id){
 // [A, B, C, D, E]
 bool inv_remove(Inventory *inv, int id) {
     Product *p = inv_find(inv, id);
-    if (p != NULL){
-        size_t idx = p - inv->items;
 
-    } else {
+    if (p == NULL){
         return false;
     }
+
+    size_t idx = p - inv->items;
+    size_t num_after = inv->count - idx - 1;
+
+    if (num_after > 0) {
+        memmove(p, p+1, sizeof(Product) * num_after);
+    }
+
+    (inv->count)--;
+    return true;
 
 }
 

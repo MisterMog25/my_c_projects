@@ -4,9 +4,6 @@
 #include <string.h>
 #include "inventory.h"
 #include "input.h"
-#include <unistd.h>
-
-
 
 void inv_print(const Inventory *inv);
 void prod_print(const Product *p);
@@ -29,17 +26,22 @@ int main(void){
         if (!readInt("Enter the number: ", 1, 5, &choice)) break;
         switch (choice) {
             case 1:
-                readString("\nEnter the name of the product: ", name, PRODUCT_NAME_LEN);
-                readInt("Enter the price in cents: ", 1, 999999999, &price);
-                readInt("Enter the quantity: ", 1, 999999999, &quantity);
-
+                if (!readString("\nEnter the name of the product: ", name, PRODUCT_NAME_LEN) ||
+                    !readInt("Enter the price in cents: ", 1, 999999999, &price) ||
+                    !readInt("Enter the quantity: ", 0, 999999999, &quantity)) {
+                    isRunning = false;
+                    break;
+                }
                 inv_add(&inv, name, price, quantity);
                 break;
             case 2:
                 inv_print(&inv);
                 break;
             case 3:
-                readInt("Enter the id: ", 1, 999999999, &id);
+                if (!readInt("Enter the id: ", 1, 999999999, &id)){
+                    isRunning = false;
+                    break;
+                };
                 Product *p = inv_find(&inv, id);
                 if (p != NULL){
                     prod_print(p);
@@ -48,15 +50,17 @@ int main(void){
                 }
                 break;
             case 4:
-                readInt("Enter the id to delete: ", 1, 999999999999, &id);
+                if (!readInt("Enter the id to delete: ", 1, 999999999, &id)){
+                    isRunning = false;
+                    break;
+                };
                 if(inv_remove(&inv, id)){
-                    printf("Successfuly deleted");
+                    printf("Successfuly deleted\n");
                 } else {
-                    printf("An error occured")
+                    printf("An error occured\n");
                 };
                 break;
             case 5:
-                inv_free(&inv);
                 isRunning = false;
                 break;
         }

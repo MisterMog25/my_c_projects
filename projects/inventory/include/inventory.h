@@ -24,6 +24,7 @@ void inv_free(Inventory *inv);
 bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity);
 Product* inv_find(Inventory *inv, int id);
 bool inv_remove(Inventory *inv, int id);
+bool inv_save(Inventory *inv, const char *path);
 
 
 
