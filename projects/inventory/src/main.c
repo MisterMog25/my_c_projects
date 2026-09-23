@@ -13,7 +13,8 @@ int main(void){
     inv_init(&inv); 
 
     int choice = 0;
-    char name[PRODUCT_NAME_LEN] = "";
+    char name[PRODUCT_NAME_LEN] = "";    
+    char name_of_file[FILE_LENGTH] = "";
     int price = 0;
     int quantity = 0;
     bool isRunning = true;
@@ -22,7 +23,7 @@ int main(void){
     printf("*** INVENTORY V2 ***\n");
 
     while (isRunning){
-        printf("\n1 Add   2 List   3 Find by id   4 Remove by id   5 Exit\n");
+        printf("\n1 Add   2 List   3 Find by id   4 Remove by id   5 Save   6 Load   7 Exit\n");
         if (!readInt("Enter the number: ", 1, 5, &choice)) break;
         switch (choice) {
             case 1:
@@ -61,6 +62,19 @@ int main(void){
                 };
                 break;
             case 5:
+                if (!readString("Enter path to save: ", name_of_file, FILE_LENGTH)) {
+                    isRunning = false;
+                    break;
+                }
+                if(inv_save(&inv, name_of_file)) {
+                    printf("Successfuly saved\n");  
+                } else {
+                    printf("An error occured\n");
+                }
+                break;
+            case 6:
+                break;            
+            case 7:
                 isRunning = false;
                 break;
         }

@@ -67,5 +67,14 @@ bool inv_remove(Inventory *inv, int id) {
 
 }
 
+bool inv_save(Inventory *inv, const char *path) {
+    char tmpPath[300] = "";
+    snprintf(tmpPath, sizeof(tmpPath), "%s.tmp", path);
+
+    file *f = fopen(tmpPath, "w");
+    if (f == NULL) return false;
+
+} 
+
 
 

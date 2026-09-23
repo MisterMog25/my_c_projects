@@ -1,6 +1,7 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 #define PRODUCT_NAME_LEN 50
+#define FILE_LENGTH 250
 
 #include <stdbool.h>
 #include <stddef.h>
