@@ -24,7 +24,7 @@ int main(void){
 
     while (isRunning){
         printf("\n1 Add   2 List   3 Find by id   4 Remove by id   5 Save   6 Load   7 Exit\n");
-        if (!readInt("Enter the number: ", 1, 5, &choice)) break;
+        if (!readInt("Enter the number: ", 1, 7, &choice)) break;
         switch (choice) {
             case 1:
                 if (!readString("\nEnter the name of the product: ", name, PRODUCT_NAME_LEN) ||
