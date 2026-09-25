@@ -4,6 +4,7 @@
 #include <string.h>
 #include "inventory.h"
 #include "input.h"
+#include "storage.h"
 
 void inv_print(const Inventory *inv);
 void prod_print(const Product *p);
@@ -73,7 +74,16 @@ int main(void){
                 }
                 break;
             case 6:
-                break;            
+                if (!readString("Enter path to load from: ", name_of_file, FILE_LENGTH)) {
+                    isRunning = false;
+                    break;
+                }
+                if(inv_load(&inv, name_of_file)) {
+                    printf("Successfuly loaded!\n");  
+                } else {
+                    printf("An error occured\n");
+                }
+                break;         
             case 7:
                 isRunning = false;
                 break;
