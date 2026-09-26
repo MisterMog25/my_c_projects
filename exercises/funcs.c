@@ -37,6 +37,7 @@ int main(void){
     student2.age = 12;
     student2.gpa = 3.4;
     student2.isFullTime = false;
+    student2.gpa = 2.2;
 
     printStudent(student2);
 
