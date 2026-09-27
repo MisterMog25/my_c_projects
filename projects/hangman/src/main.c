@@ -4,13 +4,16 @@
 // #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 // #include <unistd.h>
 
 int randomNum(int min, int max);
 bool randomWord(int num, char *word, size_t size, const char *path);
 #define MAX_WORDS 100
+// bool decrementAttempts(int *num);
 
-int main(){
+
+int main(void){
     int min = 1;
     int max = 5;
     int tries = 6;
@@ -18,6 +21,8 @@ int main(){
     int num = 0;
     char path[] = "words.txt";
     bool isRunning = true;
+    // char availableLetters[] = "qwertyuiopasdfghjklzxcvbnm";
+    char choice = '\0';
     
 
     srand(time(NULL));
@@ -25,7 +30,6 @@ int main(){
     num = randomNum(min, max);
     if (!randomWord(num, word, sizeof(word), path)) {
         printf("Smth went wrong...\n");
-        return 0;
     };
     size_t len = strlen(word);
 
@@ -33,14 +37,21 @@ int main(){
     memset(secret, '_', len);
     secret[len] = '\0';
 
-    printf("%s\n", secret);
-
-
     printf("*** HANGMAN GAME ***\n");
 
-    // while (isRunning) {
+    while (isRunning) {
+        printf("Secret word: %s\n", secret);
+        printf("Remaining Attempts: %d\n", tries);
+        printf("Enter a letter: ");
+        scanf(" %c", &choice);
+        
+        for (size_t i = 0; i < len; i++){
+            if (tolower(choice) == word[i]) {
+                secret[i] = tolower(choice);
+            }
+        }
 
-    // }
+    }
 
     return 0;
 }
@@ -61,6 +72,7 @@ bool randomWord(int num, char *word, size_t size, const char *path) {
 
 
     if (fgets(line, sizeof(line), f) != NULL) {
+        line[strcspn(line, "\r\n")] = 0;
 
         int read_count = sscanf(line, "%49[^|]|%49[^|]|%49[^|]|%49[^|]|%49[^|]",
             temp[0], temp[1], temp[2], temp[3], temp[4]);
