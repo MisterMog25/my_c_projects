@@ -11,7 +11,7 @@ bool inv_load(Inventory *inv, const char *path) {
     int quantity = 0;
     int nextId = 0;
 
-    FILE *pFile = fopen(path, "r");
+    FILE *pFile = fopen(path, "r"); 
     if (pFile == NULL) {
         // printf("Error: could not open file for reading.\n");
         return false;
