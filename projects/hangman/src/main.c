@@ -6,30 +6,23 @@
 #include <ctype.h>
 // #include <unistd.h>
 
-int randomNum(int min, int max);
-bool randomWord(int num, char *word, size_t size, const char *path);
+bool load_random_word(const char *path, char *out, size_t size);
 
 
 int main(void){
-    int min = 1;
-    int max = 5;
     int tries = 5;
     char word[50] = "";
-    int num = 0;
-    char path[] = "words.txt";
-    bool isRunning = true;
+    const char *path = "words.txt";
     char availableLetters[] = "qwertyuiopasdfghjklzxcvbnm";
     char choice = '\0';
-    bool isPartOf = false;
-    
 
     srand(time(NULL));
     
-    num = randomNum(min, max);
-    if (!randomWord(num, word, sizeof(word), path)) {
-        printf("Smth went wrong...\n");
-        break;
+    if (!randomWord(path, word, sizeof(word))) {
+        fprintf(stderr, "Could not load a word from %s\n", path);
+        return 1;
     };
+
     size_t len = strlen(word);
 
     // answer secret _____
@@ -39,27 +32,34 @@ int main(void){
 
     printf("*** HANGMAN GAME ***\n");
 
-    while (isRunning) {
+    while (true) {
         printf("\nSecret word: %s\n", secret);
         printf("Remaining Attempts: %d\n", tries);
         printf("\navailable letters: %s\n", availableLetters);
         printf("Enter a letter: ");
         scanf(" %c", &choice);
+        choice = tolower((unsigned char)choice);
 
-        if (strchr(availableLetters, tolower(choice)) == NULL){
-            printf("This letter has been already used!\n");
+        char *ptr = strchr(availableLetters, choice);
+
+        if (ptr == NULL) {
+            printf("Invalid or already used!\n");
             continue;
         }
-        
+        memmove(ptr, ptr + 1, strlen(ptr)); 
+
+        // switcher if letter is in the word
+        bool hit = false;
+
         for (size_t i = 0; i < len; i++){
-            if (tolower(choice) == word[i]) {
-                secret[i] = tolower(choice);
-                isPartOf = true;
+            if (word[i] == choice) {
+                secret[i] = choice;
+                hit = true;
             }
             
         }
 
-        if (!isPartOf) {
+        if (!hit) {
             tries--;
             printf("Wrong guess!\n");
         }
@@ -71,47 +71,49 @@ int main(void){
             printf("\nYou won, congrats!\n");
             printf("The word was, %s\n", word);
             break;
-        }
-
-        char *ptr = strchr(availableLetters, choice);
-
-        if (ptr != NULL) {
-            memmove(ptr, ptr+1, strlen(ptr));
-        }
-        isPartOf = false;
-
+        }    
     }
 
     return 0;
 }
 
-int randomNum(int min, int max) {
-    return (rand() % (max - min + 1)) + min;
-}
-
-bool randomWord(int num, char *word, size_t size, const char *path) {
+bool load_random_word(const char *path, char *out, size_t size) {
 
     FILE *f = fopen(path, "r");
     if (f == NULL) {
         return false;
     }
 
-    char line[1024] = {0};
-    char temp[5][50] = {0};
+    int count = 0;
+    char temp[256];
 
+    while (fgets(temp, sizeof(temp), f) != NULL){
 
-    if (fgets(line, sizeof(line), f) != NULL) {
-        line[strcspn(line, "\r\n")] = 0;
-
-        int read_count = sscanf(line, "%49[^|]|%49[^|]|%49[^|]|%49[^|]|%49[^|]",
-            temp[0], temp[1], temp[2], temp[3], temp[4]);
-
-        if (read_count == 5 && num >= 1 && num <= 5) {
-            snprintf(word, size, "%s", temp[num-1]);
-            fclose(f);
-            return true;
-        }   
+        temp[strcspn(temp, "\r\n")] = '\0';
+        if (temp[0] == '\0') continue;
+        count++;
     }
-    fclose(f);
-    return false;
+
+    if (count == 0){
+        fclose(f);
+        return false;
+    }
+
+    rewind(f);
+
+    int targetIndex = rand() % count;
+
+    for (int i = 0; i <= targetIndex; i++) {
+        if (fgets(temp, sizeof(temp), f) == NULL) {
+            fclose(f);
+            return false;
+        }
+        snprintf(out, size, "%s", temp);
+    }
+
+    out[strcspn(out, "\r\n")] = '\0';
+    for (size_t i = 0; out[i]; i++) out[i] = tolower((unsigned char)out[i]);
+
+    fclosef(f);
+    return true;
 }
