@@ -7,6 +7,7 @@
 // #include <unistd.h>
 
 bool load_random_word(const char *path, char *out, size_t size);
+bool read_letter(char *out, const char *prompt);
 
 
 int main(void){
@@ -18,7 +19,7 @@ int main(void){
 
     srand(time(NULL));
     
-    if (!randomWord(path, word, sizeof(word))) {
+    if (!load_random_word(path, word, sizeof(word))) {
         fprintf(stderr, "Could not load a word from %s\n", path);
         return 1;
     };
@@ -36,8 +37,11 @@ int main(void){
         printf("\nSecret word: %s\n", secret);
         printf("Remaining Attempts: %d\n", tries);
         printf("\navailable letters: %s\n", availableLetters);
-        printf("Enter a letter: ");
-        scanf(" %c", &choice);
+
+        while (!read_letter(&choice, "Enter the letter: ")){
+            printf("Incorrect input\n");
+        }
+
         choice = tolower((unsigned char)choice);
 
         char *ptr = strchr(availableLetters, choice);
@@ -114,6 +118,15 @@ bool load_random_word(const char *path, char *out, size_t size) {
     out[strcspn(out, "\r\n")] = '\0';
     for (size_t i = 0; out[i]; i++) out[i] = tolower((unsigned char)out[i]);
 
-    fclosef(f);
+    fclose(f);
     return true;
+}
+
+bool read_letter(char *out, const char *prompt) {
+    char line[16] = {0};
+    printf("%s", prompt);
+    if(fgets(line, sizeof(line), stdin) == NULL return false;
+
+    size_t len = strcspn(out, "\n");
+
 }
