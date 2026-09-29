@@ -70,6 +70,7 @@ int main(void){
 
         if (tries == 0) {
             printf("\nGame over, you lost((\n");
+            printf("The word was, %s\n", word);
             break;
         } else if (strcmp(secret, word) == 0){
             printf("\nYou won, congrats!\n");
@@ -82,6 +83,7 @@ int main(void){
 }
 
 bool load_random_word(const char *path, char *out, size_t size) {
+    size_t j = 0;
 
     FILE *f = fopen(path, "r");
     if (f == NULL) {
@@ -107,13 +109,16 @@ bool load_random_word(const char *path, char *out, size_t size) {
 
     int targetIndex = rand() % count;
 
-    for (int i = 0; i <= targetIndex; i++) {
+    for (int i = 0; i <= targetIndex; ) {
         if (fgets(temp, sizeof(temp), f) == NULL) {
             fclose(f);
             return false;
         }
-        snprintf(out, size, "%s", temp);
+        temp[strcspn(temp, "\r\n")] = '\0';
+        if (temp[0] == '\0') continue;
+        i++;
     }
+    snprintf(out, size, "%s", temp);
 
     out[strcspn(out, "\r\n")] = '\0';
     for (size_t i = 0; out[i]; i++) out[i] = tolower((unsigned char)out[i]);
@@ -123,10 +128,22 @@ bool load_random_word(const char *path, char *out, size_t size) {
 }
 
 bool read_letter(char *out, const char *prompt) {
-    char line[16] = {0};
+    char line[8];
     printf("%s", prompt);
-    if(fgets(line, sizeof(line), stdin) == NULL return false;
+    if (fgets(line, sizeof(line), stdin) == NULL) return false;
 
-    size_t len = strcspn(out, "\n");
+    size_t len = strcspn(line, "\n");
+    if (line[len] == '\n') {
+        line[len] = '\0';
+    } else {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) { }
+    }
+
+    if (len != 1) return false;
+    if (!isalpha((unsigned char)line[0])) return false;
+
+    *out = tolower((unsigned char)line[0]);
+    return true;
 
 }
