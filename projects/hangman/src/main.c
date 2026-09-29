@@ -83,7 +83,6 @@ int main(void){
 }
 
 bool load_random_word(const char *path, char *out, size_t size) {
-    size_t j = 0;
 
     FILE *f = fopen(path, "r");
     if (f == NULL) {
