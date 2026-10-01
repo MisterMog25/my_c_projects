@@ -92,10 +92,16 @@ bool load_random_word(const char *path, char *out, size_t size) {
     int count = 0;
     char temp[256];
 
-    while (fgets(temp, sizeof(temp), f) != NULL){
+    // while (fgets(temp, sizeof(temp), f) != NULL){
 
-        temp[strcspn(temp, "\r\n")] = '\0';
-        if (temp[0] == '\0') continue;
+    //     temp[strcspn(temp, "\r\n")] = '\0';
+    //     if (temp[0] == '\0') continue;
+    //     count++;
+    // }
+
+    while (fgets(temp, sizeof(temp), f) != NULL) {
+        temp[strcspn(temp, "\r\n")] = "\0";
+        if temp[0] == '\0' continue;
         count++;
     }
 
