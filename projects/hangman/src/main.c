@@ -42,8 +42,6 @@ int main(void){
             printf("Incorrect input\n");
         }
 
-        choice = tolower((unsigned char)choice);
-
         char *ptr = strchr(availableLetters, choice);
 
         if (ptr == NULL) {
@@ -100,8 +98,9 @@ bool load_random_word(const char *path, char *out, size_t size) {
     // }
 
     while (fgets(temp, sizeof(temp), f) != NULL) {
-        temp[strcspn(temp, "\r\n")] = "\0";
-        if temp[0] == '\0' continue;
+
+        temp[strcspn(temp, "\r\n")] = '\0';
+        if (temp[0] == '\0') continue;
         count++;
     }
 
@@ -124,8 +123,6 @@ bool load_random_word(const char *path, char *out, size_t size) {
         i++;
     }
     snprintf(out, size, "%s", temp);
-
-    out[strcspn(out, "\r\n")] = '\0';
     for (size_t i = 0; out[i]; i++) out[i] = tolower((unsigned char)out[i]);
 
     fclose(f);
