@@ -37,11 +37,10 @@ int main(void) {
     //     for (int i = 0; i < size; i++) printf("%d ", numbers[i]);
     // }
 
-
     char dst[16] = "Hello, ";
     snprintf(dst + strlen(dst), sizeof dst - strlen(dst), "%s", "!!");
     printf("%s\n", dst);
     return 0;
-    
+
 }
 

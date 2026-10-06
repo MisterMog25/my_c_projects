@@ -1,10 +1,24 @@
 #include <stdio.h>
+#include <string.h>
 
 int main(){
     printf("Hello world\n");
 
-    int numbers[] = {1, 4, 54, 3, 4};
+    char numbers[30];
+    printf("type some text-o: ");
+    fgets(numbers, sizeof(numbers), stdin);
 
-    printf("%d\n", numbers[1]);
+    char *p = numbers;
+
+    // printf("%c\n", p[7]);
+    // p[7] = *(p + 7);
+
+    while (*p) {
+        while (*p == ' ') p++;
+        printf("%c\n", p[0]);
+    }
+    
+
+    printf("%d\n", strcspn(numbers, "\n"));
     return 0;
 }
