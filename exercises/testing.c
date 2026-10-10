@@ -15,10 +15,11 @@ int main(){
 
     while (*p) {
         while (*p == ' ') p++;
-        printf("%c\n", p[0]);
+        printf("%c", p[0]);
+        p++;
     }
     
 
-    printf("%d\n", strcspn(numbers, "\n"));
+    printf("%d", strcspn(numbers, "\n"));
     return 0;
 }
