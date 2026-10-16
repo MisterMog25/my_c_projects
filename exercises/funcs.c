@@ -1,3 +1,4 @@
+#include <complex.h>
 #include <stdio.h>
 #include <stdbool.h>
 // #include "math_utils.h"
@@ -18,6 +19,12 @@ typedef struct {
     float gpa;
     bool isFullTime;
 }Student;
+
+typedef struct {
+    int chars;
+    int age;
+    bool isGood;
+} Studente;
 
 void printStudent(Student student);
 
