@@ -28,8 +28,8 @@ bool inv_add(Inventory *inv, const char *name, int price_cents, int quantity) {
     Product *p = &inv->items[inv->count];
     p->id = inv->next_id;
     snprintf(p->name, sizeof p->name, "%s", name);
-    p->price_cents = price_cents;
-    p->quantity = quantity;
+    p -> price_cents = price_cents;
+    p -> quantity = quantity;
 
     (inv->count)++;
     (inv->next_id)++;
