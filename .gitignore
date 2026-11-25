@@ -2,3 +2,8 @@ build/
 .cache/
 .vscode/
 .DS_Store
+
+# compiled by hand next to the source (not part of the CMake build)
+exercises/testing
+exercises/string_practice/01_string_lib
+exercises/string_practice/02_wordlist_example
